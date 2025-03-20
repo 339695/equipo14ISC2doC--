@@ -1,2 +1,5 @@
 # equipo14ISC2doC--
-Hector: 
+Hector: Milenio y Digito
+Alex: Scrabble y Palabras
+Goyo: Laberinto
+Landon: Teclado
