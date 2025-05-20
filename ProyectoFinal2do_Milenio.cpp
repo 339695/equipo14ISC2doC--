@@ -10,7 +10,9 @@ void comparamo(char[],char[]);
 
 int main() {
     int t;
+    cout<<"Cuantas veces quieres comparar? \n";
     cin>>t;
+    cin.ignore();
     while(t--){
         pedimo(cadena1,cadena2);
         comparamo(cadena1,cadena2);
@@ -19,10 +21,10 @@ int main() {
 }
 
 void pedimo(char cadena1[],char cadena2[]){
-    cout<<"dame la cadena 1 we: \n";
-    gets(cadena1);
-    cout<<"dame la cadena 2 we: \n";
-    gets(cadena2);
+    cout<<"dame la cadena 1 : \n";
+    cin.getline(cadena1, 100);
+    cout<<"dame la cadena 2 : \n";
+    cin.getline(cadena2, 100);
 }
 void comparamo(char cadena1[],char cadena2[]){
     int j=0,c=0;
