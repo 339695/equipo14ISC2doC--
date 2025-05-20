@@ -7,6 +7,7 @@ using namespace std;
 char cadena1[100],cadena2[100];
 void pedimo(char[],char[]);
 void comparamo(char[],char[]);
+void resolver();
 
 int main() {
     int t;
@@ -27,6 +28,8 @@ void pedimo(char cadena1[],char cadena2[]){
     cin.getline(cadena2, 100);
 }
 void comparamo(char cadena1[],char cadena2[]){
+    FILE *outputs;
+    outputs=fopen("output.txt","a");
     int j=0,c=0;
     for(int i=0;i<strlen(cadena1);i++){
         if(cadena2[j]==cadena1[i]){
@@ -34,7 +37,16 @@ void comparamo(char cadena1[],char cadena2[]){
         }
 
     }
-    if(c==strlen(cadena2))cout<<"YES"<<endl;
-    else cout<<"NO"<<endl;
- 
+    //imprimir las cadenas separadas por una tabulacion
+    fprintf(outputs,"%s\t%s\n",cadena1,cadena2);
+    if(c==strlen(cadena2)){
+        cout<<"YES"<<endl;
+        fprintf(outputs,"YES\n");
+    }
+    else{
+        cout<<"NO"<<endl;
+        fprintf(outputs,"NO\n");
+    }
+    fclose(outputs);
 }
+
