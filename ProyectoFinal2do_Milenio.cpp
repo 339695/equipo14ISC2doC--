@@ -7,7 +7,6 @@ using namespace std;
 char cadena1[100],cadena2[100];
 void pedimo(char[],char[]);
 void comparamo(char[],char[]);
-void resolver();
 
 int main() {
     int t;
