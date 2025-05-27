@@ -1,5 +1,6 @@
 #include <iostream>
 #include <time.h>
+#include <string.h>
 
 using namespace std;
 
@@ -187,22 +188,47 @@ void liberar(int **mat){
 
 // Funcion para grabar los renglones y columnas en el archivo
 void grabar(){
-	FILE *archivo;  //variable para manejar el archivo
-	int ren, col; 
+    FILE *archivo;
+    char entrada[3];
+    int ren, col;
 
-    // Abrir archivo
-	archivo = fopen("tam.txt","w");
+    archivo = fopen("tam.txt", "w");
+    if(archivo == NULL){
+        cout << "Error al abrir el archivo\n";
+        return;
+    }
 
-	cout << "Numero de renglones: ";
-	cin >> ren;
-	fprintf(archivo,"%d\n",ren); // grabar en el archivo
+    // Pedir renglones
+    cout << "Numero de renglones: ";
+    cin >> entrada;
 
-    cout << "Numero de Columnas: ";
-    cin >> col;
-    fprintf(archivo,"%d\n",col);// grabar en el archivo
+    // Verificar que se ingrese solamente enteros y positivos
+    for(int i=0; entrada[i]!='\0'; i++){
+        if(!isdigit(entrada[i])){
+            cout << "Entrada invalida, solo se permiten enteros positivos" << endl;
+            fclose(archivo);
+            return;
+        }
+    }
+    ren = atoi(entrada); // Convertir a entero
+    fprintf(archivo, "%d\n", ren); // grabar en el archivo
 
-	// Cerrar archivo 
-	fclose(archivo);
+    // Pedir columnas
+    cout << "Numero de columnas: ";
+    cin >> entrada;
+
+    // Verificar que se ingrese solamente enteros y positivos
+    for(int i=0; entrada[i]!='\0'; i++){
+        if(!isdigit(entrada[i])){
+            cout << "Entrada invalida, solo se permiten enteros positivos" << endl;
+            fclose(archivo);
+            return;
+        }
+    }
+    col = atoi(entrada); // Convertir a entero
+    fprintf(archivo, "%d\n", col); // grabar en el archivo
+
+    fclose(archivo); // cerrar archivo
 }
 
 // imprimir la salida en el archivo
