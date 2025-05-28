@@ -7,25 +7,24 @@ void ISBN(long long codigo,int A[]);
 bool ISBNValido(int A[]);
 int main(){
     long long codigo;
+    int A[13];
     FILE *archivo;
-    archivo=fopen("ISBN.txt","a");
+    archivo=fopen("ISBN.txt","r");
     if(archivo==NULL){
         cout<<"Error al abrir el archivo."<<endl;
         return 1;
     }
-    fprintf(archivo,"%lld\t", codigo);
-    int A[13];
-    cout<<"Ingrese el codigo ISBN (13 digitos): ";
-    cin>>codigo;
-    ISBN(codigo, A);
-    fclose(archivo);
-    return 0;
+    while(fscanf(archivo,"%lld",&codigo)!=EOF){
+        ISBN(codigo, A);
+    }
+        fclose(archivo);
+        return 0;
 }
 void ISBN(long long codigo, int A[]){
     //cada digito se guarda en el arreglo
     FILE *archivo;
     archivo=fopen("ISBN.txt","a");
-    for(int i=0;i<13;++i,codigo/=10){
+    for(int i=0;i<13;i++,codigo/=10){
         A[(13-1)-i]=codigo%10;
     }
     // mostrar el ISBN desglosado
@@ -34,14 +33,16 @@ void ISBN(long long codigo, int A[]){
         cout<<A[i];
     }
     cout<<endl;
-    if (ISBNValido(A)) {
+    if(ISBNValido(A)){
         cout<<"El ISBN es valido"<<endl;
-        fprintf(archivo,"ISBN valido: \n");
+        //fprintf(archivo,"ISBN valido: \n");
     } 
     else{
         cout<<"El ISBN no es valido"<<endl;
-        fprintf(archivo,"ISBN no valido: \n");
+        //fprintf(archivo,"ISBN no valido: \n");
     }
+    fclose(archivo);
+    cout<<"-----------------------------"<<endl;
 }
 bool ISBNValido(int A[]){
     int suma=0;
