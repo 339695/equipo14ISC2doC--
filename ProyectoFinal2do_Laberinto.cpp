@@ -16,7 +16,7 @@ union Datos{
 };
 
 // Variables globales 
-int REN, COL;
+int reng, colu;
 Posicion ultimaPos = {-1, -1}; // inicializar union
 int chacales = 0; // contador de chacales
 
@@ -68,14 +68,14 @@ int main(){
 
 // Funcion para llenar la matriz dinamica
 int **llenar(){
-    int **aux = new int*[REN];
-    for(int i=0; i<REN; ++i){
-        (*(aux + i)) = new int[COL]; // Dinamicas con new
+    int **aux = new int*[reng];
+    for(int i=0; i<reng; ++i){
+        (*(aux + i)) = new int[colu]; // Dinamicas con new
     }
 
     // Llenado de la matriz con numeros random con ayuda de un ciclo for
-    for(int i=0; i<REN; i++){
-        for(int j = 0; j < COL; j++){
+    for(int i=0; i<reng; i++){
+        for(int j = 0; j < colu; j++){
             (*(*(aux + i) + j)) = rand() % 10; // numeros random
         }
     }
@@ -85,8 +85,8 @@ int **llenar(){
 
 // Mostrar contenido de la matriz
 void mostrar(int **mat){
-    for(int i=0; i<REN; i++){
-        for(int j=0; j<COL; j++){
+    for(int i=0; i<reng; i++){
+        for(int j=0; j<colu; j++){
             cout << (*(*(mat + i) + j)) << "\t";
         }
         cout << endl;
@@ -101,7 +101,7 @@ bool dimension(){
     
 
     // Abre el archivo en modo lectura
-    archivo = fopen("tam.txt", "r");
+    archivo = fopen("archBase.txt", "r");
 
     // Verificar que el archivo se haya creado correctamente
     if(!archivo){
@@ -110,19 +110,19 @@ bool dimension(){
     }
 
     // Lee la primera fila y almacena el valor en REN
-    fscanf(archivo, "%d", &REN);
+    fscanf(archivo, "%d", &reng);
 
     // Lee la segunda fila y almacena el valor en TAM2
-    fscanf(archivo, "%d", &COL);
+    fscanf(archivo, "%d", &colu);
 
     // Verificar que la matriz sea cuadrada
-    if(REN != COL){
+    if(reng != colu){
         cout << "Error, la matriz debe ser cuadrada (REN y COL deben ser iguales)" << endl;
         return false;
     }
 
     // Crear un limite de minimo y maximo
-    if(REN < 5 || REN > 15 || COL < 5 || COL > 15){
+    if(reng < 5 || reng > 15 || colu < 5 || colu > 15){
         cout << "Error, valores fuera de rango (minimo 5, maximo 15)" << endl << endl;
         return false;
     }
@@ -139,7 +139,7 @@ int suma(int **mat){
     chacales = 0; // Reiniciar el contador de ceros
 
     // Sumar la diagonal principal y contar chacales
-    for(int i=0; i<REN; ++i){
+    for(int i=0; i<reng; ++i){
         if((*(*(mat + i) + i)) == 0){
             chacales++; // Aumentar el contador de chacales
         }
@@ -159,16 +159,16 @@ int suma2(int **mat){
     sumTot2.sumaTotal = 0; // Definir en 0 el acomulador
 
     if(chacales < 3){
-        for(int i = COL-2; i>=0; i--){  // Recorre de abajo hacia arriba
-            if((*(*(mat + i) + COL - 1)) == 0){
+        for(int i = colu-2; i>=0; i--){  // Recorre de abajo hacia arriba
+            if((*(*(mat + i) + colu - 1)) == 0){
                 chacales++; // Aumentar el contador de chacales
             }else{
                 if(chacales == 3){
                     ultimaPos.fila = i+1; // REN
-                    ultimaPos.columna = COL - 1; // COL
+                    ultimaPos.columna = colu - 1; // COL
                     break;
                 }
-                sumTot2.sumaTotal += *(*(mat + i) + COL - 1);  // Sumar
+                sumTot2.sumaTotal += *(*(mat + i) + colu - 1);  // Sumar
             }
         }
     }
@@ -180,7 +180,7 @@ int suma2(int **mat){
 
 // Funcion para liberar la memoria dinamica
 void liberar(int **mat){
-    for(int i = 0; i < REN; i++){
+    for(int i = 0; i < reng; i++){
         delete[] (*(mat +i));
     }
     delete[] mat;
@@ -192,9 +192,9 @@ void grabar(){
     char entrada[3];
     int ren, col;
 
-    archivo = fopen("tam.txt", "w");
+    archivo = fopen("archBase.txt", "w");
     if(archivo == NULL){
-        cout << "Error al abrir el archivo\n";
+        cout << "Error al abrir el archivo" << endl;
         return;
     }
 
@@ -236,13 +236,13 @@ void imprimir(int **mat, int sumTot){
     FILE *archivo;  //variable para manejar el archivo
 
     // Abrir archivo
-	archivo = fopen("tam.txt","w"); // Write para sobreescribir y reutilizar el mismo archivo 
-    fprintf(archivo,"\nNumero de renglones: %d", REN);
-    fprintf(archivo,"\nNumero de columnas: %d\n", COL);
+	archivo = fopen("archBase.txt","w"); // Write para sobreescribir y reutilizar el mismo archivo 
+    fprintf(archivo,"\nNumero de renglones: %d", reng);
+    fprintf(archivo,"\nNumero de columnas: %d\n", colu);
 
     // Grabar la matriz en el archivo
-    for(int i=0; i<REN; i++){
-        for(int j=0; j<COL; j++){
+    for(int i=0; i<reng; i++){
+        for(int j=0; j<colu; j++){
             fprintf(archivo, "%d\t",(*(*(mat + i) + j)));
         }
         fprintf(archivo,"\n");
