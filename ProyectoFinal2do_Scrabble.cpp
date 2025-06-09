@@ -9,6 +9,7 @@ using namespace std;
 
 char diccionario[10][10]={"manzana", "perro", "cielo", "felicidad", "rio", "espejo", "sol", "libro", "piedra", "flor"};
 
+
 enum Orientacion {VERTICAL, HORIZONTAL};
 bool colocarPalabra (char**, int, int, Orientacion, char*);
 bool estaVacio (char**);
@@ -16,12 +17,20 @@ bool esPalabra(char*);
 void imprimir(char**);
 void inicializar(char**);
 void orientacionSelect(Orientacion&);
+bool cabe(char*,int,int,Orientacion);
+void menu();
 
 int main(){
+    menu();
+    return 0;
+}
+
+void menu(){
     int opc=0;
     Orientacion orient;
     char **tablero;
     char *palabra;
+    int x=0,y=0;
     tablero = new char*[9];
     palabra = new char[9];
     for(int i=0; i<9; i++){
@@ -32,21 +41,51 @@ int main(){
     do{
         cout<<"menu"<<endl;
         cout<<"1. colocar palabra nueva"<<endl;
+        cout<<"2. imprimir"<<endl;
         cout<<"3. salir"<<endl;
         cout<<"elige una opcion: ";
         cin>>opc;
         switch(opc){
         case 1:
-            if(estaVacio(tablero) && esPalabra(palabra)){
+            cout<<"ingresa la palabra que quieres insertar: ";
+            cin>>palabra;
+            if(esPalabra(palabra)){
                 orientacionSelect(orient);
-                colocarPalabra(tablero, 5, 5, orient, palabra);
+                if(estaVacio(tablero)){
+                    if(colocarPalabra(tablero, 5, 5, orient, palabra)){
+                        cout<<"palabra insertada correctamente"<<endl;
+                    }
+                    else{
+                        cout<<"la palabara no se pudo insertar"<<endl;
+                    }
+                    imprimir(tablero);
+                }
+                else{
+                    cout<<"en que posición de x quieres colocar tu palabra? ";
+                    cin>>x;
+                    cout<<"en que posición de y quieres colocar tu palabra? ";
+                    cin>>x;
+                    if(colocarPalabra(tablero, y, x, orient, palabra)){
+                        cout<<"palabra insertada correctamente"<<endl;
+                    }
+                    else{
+                        cout<<"la palabara no se pudo insertar"<<endl;
+                    }
+                }
+
             }
             else{
-                cout<<"valores invalidos";
+                cout<<"palabra no encontrada en el diccionario"<<endl;
             }
             break;
         
+        case 2:
+            imprimir(tablero);
+            break;
+        case 3:
+            cout<<"saliendo"<<endl;
         default:
+            cout<<"valores invalidos"<<endl;
             break;
         }
     }
@@ -54,7 +93,6 @@ int main(){
 
     imprimir(tablero);
     estaVacio(tablero);
-    return 0;
 }
 
 bool estaVacio(char **tablero){
@@ -91,13 +129,14 @@ void orientacionSelect(Orientacion &orientacion){
     int o=0;
     bool val=false;
     cout<<"en que orientacion quieres colocar tu palabra(1 para vertical/ 0 para horizontal ): ";
+    cin>>o;
     do{
         switch(o){
-        case 1:
+        case 0:
             orientacion=VERTICAL;
             val=true;
             break;
-        case 0:
+        case 1:
             orientacion=HORIZONTAL;
             val=true;
             break; 
@@ -114,14 +153,45 @@ bool esPalabra(char* palabra){
         if(strcmp(palabra,diccionario[i])==0){
             return true;
         }
-        else{
-            return false;
-        }
     }
     return false; 
 }
 
-bool colocarPalabra (char** tablero, int filas, int columnas, Orientacion ori, char *palabra){
-        
+bool colocarPalabra(char** tablero, int filas, int columnas, Orientacion ori, char *palabra){
+    if(cabe(palabra,filas,columnas,ori)){    
+        if(ori==0){
+            for(int i=0;i<9;i++){
+                tablero[columnas][i]=palabra[i];
+            }
+            return true;
+        }
+        else{
+            for(unsigned int i=columnas;i<=strlen(palabra);i++){
+                tablero[i][filas]=palabra[i];
+            }
+            return true;
+        }
+    }
+    cout<<"no cabe la palabra en el tablero"<<endl;
+    return false;
+}
+
+bool cabe(char* palabra,int fila, int columna, Orientacion ori){
+    if(ori==0){
+        if(fila+strlen(palabra)>9){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+    if(ori==1){
+        if(columna+strlen(palabra)>9){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
     return false;
 }
