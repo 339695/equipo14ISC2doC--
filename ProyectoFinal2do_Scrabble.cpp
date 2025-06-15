@@ -9,8 +9,8 @@ using namespace std;
 
 char diccionario[10][10]={"manzana", "perro", "cielo", "felicidad", "rio", "espejo", "sol", "libro", "piedra", "flor"};
 
-
-enum Orientacion {VERTICAL, HORIZONTAL};
+enum Orientacion {HORIZONTAL,VERTICAL};
+bool conecta(char**, int, int, Orientacion, char*);
 bool colocarPalabra (char**, int, int, Orientacion, char*);
 bool estaVacio (char**);
 bool esPalabra(char*);
@@ -19,6 +19,7 @@ void inicializar(char**);
 void orientacionSelect(Orientacion&);
 bool cabe(char*,int,int,Orientacion);
 void menu();
+bool vacio=true;
 
 int main(){
     menu();
@@ -52,8 +53,9 @@ void menu(){
             if(esPalabra(palabra)){
                 orientacionSelect(orient);
                 if(estaVacio(tablero)){
-                    if(colocarPalabra(tablero, 5, 5, orient, palabra)){
+                    if(colocarPalabra(tablero, 4, 4, orient, palabra)){
                         cout<<"palabra insertada correctamente"<<endl;
+                        vacio=false;
                     }
                     else{
                         cout<<"la palabara no se pudo insertar"<<endl;
@@ -64,7 +66,7 @@ void menu(){
                     cout<<"en que posición de x quieres colocar tu palabra? ";
                     cin>>x;
                     cout<<"en que posición de y quieres colocar tu palabra? ";
-                    cin>>x;
+                    cin>>y;
                     if(colocarPalabra(tablero, y, x, orient, palabra)){
                         cout<<"palabra insertada correctamente"<<endl;
                     }
@@ -128,20 +130,20 @@ void inicializar(char **tablero){
 void orientacionSelect(Orientacion &orientacion){
     int o=0;
     bool val=false;
-    cout<<"en que orientacion quieres colocar tu palabra(1 para vertical/ 0 para horizontal ): ";
-    cin>>o;
     do{
+        cout<<"en que orientacion quieres colocar tu palabra(1 para vertical/ 0 para horizontal ): ";
+        cin>>o;
         switch(o){
         case 0:
-            orientacion=VERTICAL;
+            orientacion=HORIZONTAL;
             val=true;
             break;
         case 1:
-            orientacion=HORIZONTAL;
+            orientacion=VERTICAL;
             val=true;
             break; 
         default:
-            cout<<"valor fuera de limites";    
+            cout<<"valor fuera de limites"<<endl;    
             break;
         }
     }while(val!=true);
@@ -158,26 +160,60 @@ bool esPalabra(char* palabra){
 }
 
 bool colocarPalabra(char** tablero, int filas, int columnas, Orientacion ori, char *palabra){
-    if(cabe(palabra,filas,columnas,ori)){    
-        if(ori==0){
-            for(int i=0;i<9;i++){
-                tablero[columnas][i]=palabra[i];
+    int cont=0;
+    if(vacio){
+        if(cabe(palabra,filas,columnas,ori)){    
+            if(ori==0){
+                for(unsigned int i=filas;i<=columnas+strlen(palabra)-1;i++){
+                    tablero[i][filas]=palabra[cont];
+                    cont++;
+                }
+                return true;  
             }
-            return true;
-        }
-        else{
-            for(unsigned int i=columnas;i<=strlen(palabra);i++){
-                tablero[i][filas]=palabra[i];
+            else{
+                for(unsigned int i=columnas;i<=filas+strlen(palabra)-1;i++){
+                    tablero[i][columnas]=palabra[cont];
+                    cont++;
+                }
+                // cout<<"la palabra no conecta con otra palabra"<<endl;
+                return true;
             }
-            return true;
         }
+        cout<<"no cabe la palabra en el tablero"<<endl;
+        return false;
     }
-    cout<<"no cabe la palabra en el tablero"<<endl;
-    return false;
+    else{
+        if(cabe(palabra,filas,columnas,ori)){    
+            if(ori==0&&conecta(tablero,filas,columnas,ori,palabra)){
+                for(unsigned int i=columnas;i<=columnas+strlen(palabra)-1;i++){
+                    tablero[filas][i]=palabra[cont];
+                    cont++;
+                }
+                return true;  
+            }
+            else{
+                if(conecta(tablero,filas,columnas,ori,palabra)){
+                    for(unsigned int i=filas;i<=filas+strlen(palabra)-1;i++){
+                    tablero[i][columnas]=palabra[cont];
+                    cont++;
+                    }
+                }
+                else{
+                    cout<<"la palabra no conecta con otra palabra"<<endl;
+                    return false;
+                }
+                return true;
+
+                }
+            }
+        cout<<"no cabe la palabra en el tablero"<<endl;
+        return false;
+    }
+
 }
 
 bool cabe(char* palabra,int fila, int columna, Orientacion ori){
-    if(ori==0){
+    if(ori==1){
         if(fila+strlen(palabra)>9){
             return false;
         }
@@ -185,7 +221,7 @@ bool cabe(char* palabra,int fila, int columna, Orientacion ori){
             return true;
         }
     }
-    if(ori==1){
+    if(ori==0){
         if(columna+strlen(palabra)>9){
             return false;
         }
@@ -194,4 +230,25 @@ bool cabe(char* palabra,int fila, int columna, Orientacion ori){
         }
     }
     return false;
+}
+
+bool conecta(char** tab, int f, int c, Orientacion o, char* palabra){
+    int contC=0;
+    bool control=false;
+    if(o==0){
+        for(unsigned int i=c;i<=c+strlen(palabra)-1;i++){
+            if(tab[f][i]==palabra[contC]) control=true;
+            else{
+                if(tab[f][i]!=' ') return false;
+            }
+            contC++;
+        }
+    }
+    else{
+        for(unsigned int i=f;i<=f+strlen(palabra)-1;i++){
+            if(tab[i][c]==palabra[contC]) control=true;
+            contC++;
+        }
+    }
+    return control;
 }
