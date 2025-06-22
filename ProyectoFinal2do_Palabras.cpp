@@ -19,6 +19,8 @@ void iniciaizarInicioFin(char[6]);
 void cargarJuego(FILE*, juegoT[10],int*);
 void imprimirArregloStruct(juegoT[10]);
 void juego(juegoT[10],int*);
+int puntajePalabra(juegoT, char*);
+void llenarSalida(FILE* salida, char* palabra, int puntos);
 
 int main(){
     menu();
@@ -32,10 +34,52 @@ void menu(){
     int* tam=NULL;
     llenarArchivo(info);
     cargarJuego(info,registros,tam);
-    // juego();
+    juego(registros,tam);
 }
 
-void cargarJuego(FILE* info, juegoT registros[10],int* tam){
+void juego(juegoT registros[10], int* tam){
+    FILE* salida=NULL;
+    int puntos;
+    char* palabra=new char[10];
+    for(int i=0;i<10;i++){
+        switch(registros[i].tipo){
+            case 1:
+                cout<<"adivina un: sustantivo";
+                break;        
+            case 2:
+                cout<<"adivina un: verbo";
+                break;
+            case 3:
+                cout<<"adivina un: adjetivo";
+                break;
+            }
+        cout<<"pista: "<<registros[i].pista<<endl;
+        cout<<"ingresa la palabra: ";
+        cin>>palabra;
+        puntos=puntajePalabra(registros[i],palabra);
+        cout<<"puntos: "<<puntos;
+        llenarSalida(salida,palabra,puntos);
+    }
+    cout<<"puntaje total: "<<puntos;
+}
+
+void llenarSalida(FILE* salida, char* palabra, int puntos){
+    salida=fopen("salida.dat","a");
+    if(salida==NULL){
+        cout<<"error abriendo el coso";
+        return;
+    }
+    fprintf(salida,"%s, %d\n",palabra,puntos);
+    fclose(salida);
+
+}
+
+int puntajePalabra(juegoT, char*){
+
+}
+
+
+void cargarJuego(FILE* info, juegoT registros[10],int *tam){
     int iterador=0;
     info=fopen("tupu.dat","rb+");
     while (fread(&registros[iterador], sizeof(juegoT), 1, info)){
@@ -43,6 +87,7 @@ void cargarJuego(FILE* info, juegoT registros[10],int* tam){
         tam=&iterador;
     }
     fclose(info);
+    cout<<"cantidad de elementos leidos: "<<*tam<<endl;
     imprimirArregloStruct(registros);
 }
 
