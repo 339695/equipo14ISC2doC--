@@ -1,26 +1,42 @@
-// Teclado 
-// Pendiente: entradas y salidas desde archivos .txt
 #include <iostream>
 #include <cstring>
-
 using namespace std;
+typedef FILE* file;
+
+void procesarLineas(file entrada, file salida);
 
 int main() {
-    const int MAX_LEN = 1000; // tamaño maximo
-    char entrada[MAX_LEN]; // cadena de entrada
+    file arEntrada = fopen("entrada.txt","r");
+    file arSalida = fopen("salida.txt", "w");
+    
+    if(!arEntrada || !arSalida){
+    	cout<<"Error al abrir los archivos"<<endl;
+    	return 1;
+	}
 
-    while (true) { 
-        cout << "Ingresa una línea (Enter para salir): ";
-        cin.getline(entrada, MAX_LEN);
+   procesarLineas(arEntrada, arSalida);
+   
+   fclose(arEntrada);
+   fclose(arSalida);
 
-        if (strlen(entrada) == 0) break; // fin si se presiona enter
+    return 0;
+}
 
+void procesarLineas(file entrada, file salida){
+	const int MAX_LEN = 1000; // tama�oo maximo
+    char entradaLinea[MAX_LEN]; // cadena de entrada
+
+    while (fgets(entradaLinea, MAX_LEN, entrada)) { 
+        entradaLinea[strcspn(entradaLinea, "\n")]='\0'; // elimina el salto de linea si es que hay
+
+		
+		
         char resultado[MAX_LEN] = {};
         int longitud = 0;  
         int cursor = 0;    
 
-        for (int i = 0; entrada[i] != '\0'; i++) { // ciclo que recorre la cadena 
-            char c = entrada[i]; // caracter acutal
+        for (int i = 0; entradaLinea[i] != '\0'; i++) { // ciclo que recorre la cadena 
+            char c = entradaLinea[i]; // caracter acutal
 
             if (c == '-') { // simulacion de la tecla "-" 
                 cursor = 0;
@@ -47,8 +63,7 @@ int main() {
             }
         }
 
-        cout << "Resultado: " << resultado << endl;
+        printf("%s\n", resultado);
+        fprintf(salida, "%s\n", resultado);
     }
-
-    return 0;
 }
