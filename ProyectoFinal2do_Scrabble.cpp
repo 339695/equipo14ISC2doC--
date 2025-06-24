@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <windows.h>
 
 using namespace std;
 
@@ -32,6 +33,11 @@ int main(){
     return 0;
 }
 
+void setColor(int color) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+
 bool valid(int coso){
     if(coso==97||coso==98||coso==99){
         return true;
@@ -54,7 +60,9 @@ void menu(){
     inicializar(tablero);
     imprimir(tablero);
     do{
-        cout<<"menu"<<endl;
+        setColor(13);
+        cout<<"\tmenu"<<endl;
+        setColor(7);
         cout<<"a. colocar palabra nueva"<<endl;
         cout<<"b. imprimir"<<endl;
         cout<<"c. terminar intento"<<endl;
@@ -71,23 +79,30 @@ void menu(){
                 orientacionSelect(orient);
                 if(estaVacio(tablero)){
                     if(colocarPalabra(tablero, 4, 4, orient, palabra, puntos)){
+                        system("cls");
+                        setColor(2);
                         cout<<"palabra insertada correctamente"<<endl;
                         vacio=false;
                     }
                     else{
+                        setColor(4);
                         cout<<"la palabara no se pudo insertar"<<endl;
                     }
                     imprimir(tablero);
                 }
                 else{
+                    setColor(7);
                     cout<<"en que posicion de x quieres colocar tu palabra? ";
                     cin>>x;
                     cout<<"en que posicion de y quieres colocar tu palabra? ";
                     cin>>y;
                     if(colocarPalabra(tablero, y, x, orient, palabra, puntos)){
+                        system("cls");
+                        setColor(2);
                         cout<<"palabra insertada correctamente"<<endl;
                     }
                     else{
+                        setColor(4);
                         cout<<"la palabara no se pudo insertar"<<endl;
                     }
                     imprimir(tablero);
@@ -95,6 +110,8 @@ void menu(){
 
             }
             else{
+                system("cls");
+                setColor(4);
                 cout<<"palabra no encontrada en el diccionario"<<endl;
                 imprimir(tablero);
             }
@@ -104,19 +121,18 @@ void menu(){
             imprimir(tablero);
             break;
         case 'c':
+            setColor(4);
             cout<<"saliendo"<<endl;
             puntuacion(puntos);
             break;
         default:
+            setColor(4);
             cout<<"valores invalidos"<<endl;
             opc=0;
             break;
         }
     }
     while(opc!='c');
-
-    imprimir(tablero);
-    estaVacio(tablero);
 }
 
 bool estaVacio(char **tablero){
@@ -131,9 +147,19 @@ bool estaVacio(char **tablero){
 }
 
 void imprimir(char **tablero){
+    cout<<"  ";
+    for(int i=0;i<9;i++){
+        setColor(14);
+        cout<<i<<" ";
+    }
+    cout<<endl;
     for(int i = 0; i < 9; i++){
+        setColor(14);
+        cout<<i;
+    setColor(8);
         cout<<"|";
         for(int j = 0; j < 9; j++){
+            setColor(8);
             cout<<tablero[i][j]<<"|";
         }
         cout<<endl;
@@ -161,6 +187,7 @@ void orientacionSelect(Orientacion &orientacion){
     int o=0;
     bool val=false;
     do{
+        setColor(7);
         cout<<"en que orientacion quieres colocar tu palabra(1 para vertical/ 0 para horizontal ): ";
         cin>>o;
         switch(o){
@@ -173,6 +200,7 @@ void orientacionSelect(Orientacion &orientacion){
             val=true;
             break; 
         default:
+            setColor(4);
             cout<<"valor fuera de limites"<<endl;    
             break;
         }
@@ -210,6 +238,7 @@ bool colocarPalabra(char** tablero, int filas, int columnas, Orientacion ori, ch
                 return true;
             }
         }
+        setColor(4);
         cout<<"no cabe la palabra en el tablero"<<endl;
         return false;
     }
@@ -231,6 +260,7 @@ bool colocarPalabra(char** tablero, int filas, int columnas, Orientacion ori, ch
                     }
                 }
                 else{
+                    setColor(4);
                     cout<<"la palabra no conecta con otra palabra"<<endl;
                     return false;
                 }
@@ -239,6 +269,7 @@ bool colocarPalabra(char** tablero, int filas, int columnas, Orientacion ori, ch
 
                 }
             }
+        setColor(4);
         cout<<"no cabe la palabra en el tablero"<<endl;
         return false;
     }
@@ -309,6 +340,7 @@ bool conecta(char** tab, int f, int c, Orientacion o, char* palabra, int& puntos
 void puntuacion(int puntos){
     char* nombre=new char[3], *nombreMost=new char[3];
     int puntosMost=0;
+    setColor(7);
     cout<<"ingresa el nombre del jugador(solo 3 letras): ";
     cin>>nombre;
     FILE* puntuacion=fopen("puntuacion.txt","a");
@@ -316,6 +348,7 @@ void puntuacion(int puntos){
     fclose(puntuacion);
     puntuacion=fopen("puntuacion.txt","r");
     while(fscanf(puntuacion,"jugador: %s\tpuntuacion: %d\n",nombreMost,&puntosMost)!=EOF){
+        setColor(11);
         cout<<"nombre: "<<nombreMost<<"\tpuntuacion: "<<puntosMost<<endl;
     }
     fclose(puntuacion);
