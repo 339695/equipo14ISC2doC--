@@ -27,12 +27,13 @@ bool valid(char*);
 bool vacio=true;
 
 int main(){
+    cout<<"Scrabble es un juego donde se intenta obtener puntos mediante la construccion de palabras\nEl juego se desarrolla sobre un tablero de 9x9, el cual tiene casillas de premiacion(casillas marcadas con x)\n que multiplican el numero de puntos concedidos"<<endl;
     menu();
     return 0;
 }
 
 bool valid(int coso){
-    if(coso>=0&&coso<=9){
+    if(coso==97||coso==98||coso==99){
         return true;
     }
     return false;
@@ -40,7 +41,7 @@ bool valid(int coso){
 
 void menu(){
     int puntos=0;
-    int opc=0;
+    char opc;
     Orientacion orient;
     char **tablero;
     char *palabra;
@@ -54,16 +55,16 @@ void menu(){
     imprimir(tablero);
     do{
         cout<<"menu"<<endl;
-        cout<<"1. colocar palabra nueva"<<endl;
-        cout<<"2. imprimir"<<endl;
-        cout<<"3. terminar intento"<<endl;
+        cout<<"a. colocar palabra nueva"<<endl;
+        cout<<"b. imprimir"<<endl;
+        cout<<"c. terminar intento"<<endl;
         cout<<"elige una opcion: ";
         cin>>opc;
         if(!valid(opc)){
             continue;
         }
         switch(opc){
-        case 1:
+        case 'a':
             cout<<"ingresa la palabra que quieres insertar: ";
             cin>>palabra;
             if(esPalabra(palabra)){
@@ -79,9 +80,9 @@ void menu(){
                     imprimir(tablero);
                 }
                 else{
-                    cout<<"en que posición de x quieres colocar tu palabra? ";
+                    cout<<"en que posicion de x quieres colocar tu palabra? ";
                     cin>>x;
-                    cout<<"en que posición de y quieres colocar tu palabra? ";
+                    cout<<"en que posicion de y quieres colocar tu palabra? ";
                     cin>>y;
                     if(colocarPalabra(tablero, y, x, orient, palabra, puntos)){
                         cout<<"palabra insertada correctamente"<<endl;
@@ -99,10 +100,10 @@ void menu(){
             }
             break;
         
-        case 2:
+        case 'b':
             imprimir(tablero);
             break;
-        case 3:
+        case 'c':
             cout<<"saliendo"<<endl;
             puntuacion(puntos);
             break;
@@ -112,7 +113,7 @@ void menu(){
             break;
         }
     }
-    while(opc!=3);
+    while(opc!='c');
 
     imprimir(tablero);
     estaVacio(tablero);
@@ -219,6 +220,7 @@ bool colocarPalabra(char** tablero, int filas, int columnas, Orientacion ori, ch
                     tablero[filas][i]=palabra[cont];
                     cont++;
                 }
+                puntos++;
                 return true;  
             }
             else{
@@ -232,6 +234,7 @@ bool colocarPalabra(char** tablero, int filas, int columnas, Orientacion ori, ch
                     cout<<"la palabra no conecta con otra palabra"<<endl;
                     return false;
                 }
+                puntos++;
                 return true;
 
                 }
