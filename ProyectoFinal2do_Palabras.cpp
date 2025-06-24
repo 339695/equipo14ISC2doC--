@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string.h>
+#include <windows.h>
+
 using namespace std;
 
 void menu();
@@ -25,11 +27,15 @@ void iniciaizarPalabra(char palabra[100]);
 void iniciaizarPista(char pista[100]);
 bool esFin(juegoT registro, char* palabra);
 bool esIni(juegoT registro, char* palabra);
+void setColor(int);
 
 int main(){
     menu();
-
     return 0;
+}
+
+void setColor(int color){
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
 void menu(){
@@ -48,26 +54,33 @@ void juego(juegoT registros[10]){
     for(int i=0;i<10;i++){
         switch(registros[i].tipo){
             case 1:
+                setColor(7);
                 cout<<"adivina un: sustantivo"<<endl;
                 break;        
             case 2:
+                setColor(7);
                 cout<<"adivina un: verbo"<<endl;
                 break;
             case 3:
+                setColor(7);
                 cout<<"adivina un: adjetivo"<<endl;
                 break;
             default:
+                setColor(4);
                 cout<<"no se leyó el archivo"<<endl;
                 break;
             }
+        setColor(7);
         cout<<"pista: "<<registros[i].pista<<endl;
         cout<<"ingresa la palabra: ";
         cin>>palabra;
         puntos=puntajePalabra(registros[i],palabra);
+        setColor(2);
         cout<<"puntos: "<<puntos<<endl;
         llenarSalida(salida,palabra,puntos);
         Pfinales+=puntos;
     }
+    setColor(10);
     cout<<"puntaje total: "<<Pfinales;
 }
 
@@ -98,6 +111,7 @@ int puntajePalabra(juegoT registro, char* palabra){
 
 bool esFin(juegoT registro, char* palabra){
     int cont=0;
+    if(strlen(palabra)<3)return false;
     for(unsigned int i=strlen(palabra)-3;i<strlen(palabra);i++){
             if(registro.fin[cont]!=palabra[i])return false;
             cont++;
@@ -106,6 +120,7 @@ bool esFin(juegoT registro, char* palabra){
 }
 
 bool esIni(juegoT registro, char* palabra){
+    if(strlen(palabra)<3)return false;
     for(int i=0;i<3;i++){
         if(registro.ini[i]!=palabra[i])return false;
     }
@@ -122,7 +137,7 @@ void cargarJuego(FILE* info, juegoT registros[10],int *tam){
     info=fopen("info.dat","r");
     rewind(info);
     elementos=fscanf(info,"%d,%19[^,],%99[^,],%3[^,],%3[^,]\n",&tipo,palabra,pista,ini,fin);
-    cout<<elementos<<endl;
+    // cout<<elementos<<endl;
     while(elementos){
         if(elementos==-1)break;
         registros[contador].tipo=tipo;
@@ -131,20 +146,15 @@ void cargarJuego(FILE* info, juegoT registros[10],int *tam){
         strcpy(registros[contador].pista,pista);
         strcpy(registros[contador].ini,ini);
         strcpy(registros[contador].fin,fin);
-        cout<<"a"<<endl;
+        // cout<<"a"<<endl;
         elementos=fscanf(info,"%d,%19[^,],%99[^,],%3[^,],%3[^,]\n",&tipo,palabra,pista,ini,fin);
-        cout<<elementos<<endl;
+        // cout<<elementos<<endl;
         contador++;
     }
     tam=&contador;
+    setColor(8);
     cout<<"cantidad de elementos leidos: "<<*tam<<endl;
     fclose(info);
-}
-
-void imprimirArregloStruct(juegoT registros[10]){
-    for(int i=0;i<10;i++){
-        cout<<registros[i].palabra<<endl;
-    }
 }
 
 void llenarArchivo(FILE* info){
