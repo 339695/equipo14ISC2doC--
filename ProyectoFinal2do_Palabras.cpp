@@ -12,6 +12,7 @@ struct juegoT{
     char fin[4];
 };
 
+enum VoF {FALSO,VERDADERO};
 void menu();
 void crearInfo();
 void llenarArchivo(FILE*);
@@ -31,6 +32,7 @@ void setColor(int);
 int main(){
     menu();     //llamada a la funcion menu
     return 0;
+
 }
 
 void setColor(int color){               //declaracion de funcion setColor
@@ -81,6 +83,7 @@ void juego(juegoT registros[10]){   //declaracion de la funcion juego
     }
     setColor(10);   //llamada de la funcion setColor
     cout<<"puntaje total: "<<Pfinales;      //impresionde los puntos totales
+    delete(palabra);
 }       //fin de la funcion juego
 
 void llenarSalida(FILE* salida, char* palabra, int puntos){     //declaracion de la funcion llenarSalida
@@ -109,21 +112,42 @@ int puntajePalabra(juegoT registro, char* palabra){     //declaracion de la func
 }   //fin de la funcion puntajePalabra
 
 bool esFin(juegoT registro, char* palabra){ //declaracion de la funcioin esFin
+    VoF validacion=VERDADERO;
     int cont=0;
-    if(strlen(palabra)<3)return false;      //si la cadena que recibe es de menos de 3 caracteres, retorna false
+    if(strlen(palabra)<3){
+        validacion=FALSO;               //si la cadena que recibe es de menos de 3 caracteres, retorna false
+    }      
     for(unsigned int i=strlen(palabra)-3;i<strlen(palabra);i++){    //recorre los ultimos 3 caracteres de la cadena   
-            if(registro.fin[cont]!=palabra[i])return false;     //si es diferente a la variable fin, retorna false
+            if(registro.fin[cont]!=palabra[i]){
+                validacion=FALSO;           //si es diferente a la variable fin, retorna false
+            }     
             cont++;
     }
-    return true;                //si son iguales, retorna true
+    if(validacion==0){
+        return false;
+    }
+    else{
+        return true;                //si son iguales, retorna true
+    }
+
 }   //fin de la funcioni esFin
 
 bool esIni(juegoT registro, char* palabra){     //declaracion de la funcion esIni
-    if(strlen(palabra)<3)return false;              //si la cadena que recibe es menor a 3 caracteres, retorna false
+    VoF validacion=VERDADERO;
+    if(strlen(palabra)<3){
+        validacion=FALSO;       //si la cadena que recibe es menor a 3 caracteres, retorna false
+    }              
     for(int i=0;i<3;i++){               //recorre las primeras 3 posiciones de la cadena 
-        if(registro.ini[i]!=palabra[i])return false;        //si es diferente a la variable ini, retorna false
+        if(registro.ini[i]!=palabra[i]){
+            validacion=FALSO;   //si es diferente a la variable ini, retorna false
+        }
     }
-    return true;            //si no, retorna true
+    if(validacion==0){
+        return false;
+    }
+    else{
+        return true;                //si son iguales, retorna true
+    }
 }   //fin de la funcion esIni
 
 void cargarJuego(FILE* info, juegoT registros[10],int *tam){    //declaracion de la funcion cargarJuego
