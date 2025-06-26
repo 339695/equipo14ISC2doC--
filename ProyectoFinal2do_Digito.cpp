@@ -9,7 +9,7 @@ bool ISBNValido(int* isbn);
 void setColor(int);
 
 int main(){
-    long long codigo;
+    long long int codigo;
     int* isbn=new int[13];
     FILE *archivo;
     archivo=fopen("ISBN.txt","r");  //abre el archivo en modo lectura
@@ -33,7 +33,6 @@ void setColor(int color){
 
 void ISBN(long long codigo, int* isbn){
     FILE *archivo;
-    archivo=fopen("ISBN.txt","a");
     for(int i=0;i<13;i++,codigo/=10){
         isbn[(13-1)-i]=codigo%10;       //cada digito se guarda en el arreglo
     }
@@ -48,10 +47,9 @@ void ISBN(long long codigo, int* isbn){
         cout<<"El ISBN es valido"<<endl;       
     } 
     else{                   //si no es valido
-        setColor(10);
+        setColor(4);
         cout<<"El ISBN no es valido"<<endl; 
     }
-    fclose(archivo);    //cierra el archivo
     setColor(7);
     cout<<"-----------------------------"<<endl;
 }
