@@ -6,17 +6,17 @@ typedef FILE* file;
 void procesarLineas(file entrada, file salida);
 
 int main() {
-    file arEntrada = fopen("entrada.txt","r");
-    file arSalida = fopen("salida.txt", "w");
+    file arEntrada = fopen("entrada.txt","r"); // abrir archivo para la lectura
+    file arSalida = fopen("salida.txt", "w"); // abrir archivo para escribir el resultado
     
-    if(!arEntrada || !arSalida){
+    if(!arEntrada || !arSalida){ // verificar si los archivos se abrieron correctamente 
     	cout<<"Error al abrir los archivos"<<endl;
     	return 1;
 	}
 
-   procesarLineas(arEntrada, arSalida);
+   procesarLineas(arEntrada, arSalida); // llamar funcion
    
-   fclose(arEntrada);
+   fclose(arEntrada); // cerrar los archivos
    fclose(arSalida);
 
     return 0;
@@ -24,14 +24,14 @@ int main() {
 
 void procesarLineas(file entrada, file salida){
 	const int MAX_LEN = 1000; // tamañoo maximo
-    char entradaLinea[MAX_LEN]; // cadena de entrada
+    char entradaLinea[MAX_LEN]; // vector de entrada
 
     while (fgets(entradaLinea, MAX_LEN, entrada)) { 
         entradaLinea[strcspn(entradaLinea, "\n")]='\0'; // elimina el salto de linea si es que hay
 
 		
 		
-        char resultado[MAX_LEN] = {};
+        char resultado[MAX_LEN] = {}; // definir vector resultado
         int longitud = 0;  
         int cursor = 0;    
 
@@ -49,8 +49,8 @@ void procesarLineas(file entrada, file salida){
                   for (int j = cursor; j < longitud - 1; j++) { // mover los caracteres izquierda
                         resultado[j] = resultado[j + 1]; 
                     }
-                    longitud--; 
-                    resultado[longitud] = '\0'; 
+                    longitud--; // disminuir la longitud
+                    resultado[longitud] = '\0'; // asignar el ultimo valor como nulo
                 }
             } else {
                 for (int j = longitud; j > cursor; j--) { // mover los caracteres a la derecha
@@ -58,12 +58,12 @@ void procesarLineas(file entrada, file salida){
                 }
                 resultado[cursor] = c; // insertar el caracter
                 cursor++;
-                longitud++;
-                resultado[longitud] = '\0'; 
+                longitud++; // aumentar la longitud
+                resultado[longitud] = '\0'; //ultimo valor nulo
             }
         }
 
-        printf("%s\n", resultado);
-        fprintf(salida, "%s\n", resultado);
+        printf("%s\n", resultado); // mostrar en consola
+        fprintf(salida, "%s\n", resultado); // escribir en el archivo del resultado
     }
 }
