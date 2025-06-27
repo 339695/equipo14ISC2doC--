@@ -21,7 +21,7 @@ union Longitud{
 RegistroLinea procesarLinea(char* lineaOriginal); // prototipo
 void procesarArchivo(file entrada, file salida); // prototipo
 
-int main() {
+int main(){
     file arEntrada = fopen("entrada.txt", "r"); // abrir archivo para la lectura
     file arSalida = fopen("salida.txt", "w");   // abrir archivo para escribir el resultado
 
@@ -38,11 +38,11 @@ int main() {
     return 0;
 }
 
-void procesarArchivo(file entrada, file salida) {
+void procesarArchivo(file entrada, file salida){
     char* buffer = new char[MAX_LEN]; // buffer dinamico para leer cada linea
 
     while (fgets(buffer, MAX_LEN, entrada)) { 
-        buffer[strcspn(buffer, "\n")] = '\0'; // elimina el salto de linea si es que hay
+        buffer[strcspn(buffer, "\n")] = '\0'; // elimina el salto de linea si es que hay el strcspn busca el ultimo caracter osea el '\n' y lo remplaza
 
         RegistroLinea registro = procesarLinea(buffer); // procesar linea con estructura
 
@@ -57,7 +57,7 @@ void procesarArchivo(file entrada, file salida) {
     delete[] buffer; // liberar memoria del buffer
 }
 
-RegistroLinea procesarLinea(char* lineaOriginal) {
+RegistroLinea procesarLinea(char* lineaOriginal){
     // Copiar línea original a memoria dinamica
     char* original = new char[strlen(lineaOriginal) + 1]; 
     strcpy(original, lineaOriginal); // copiar cadena original
@@ -69,7 +69,7 @@ RegistroLinea procesarLinea(char* lineaOriginal) {
     longi.longitud = 0;
     int cursor = 0;    // posicion actual del cursor
 
-    for (int i = 0; lineaOriginal[i] != '\0'; i++) { // ciclo que recorre la cadena 
+    for (int i = 0; lineaOriginal[i] != '\0'; i++){ // ciclo que recorre la cadena 
         char c = lineaOriginal[i]; // caracter actual
 
         if (c == '-') { // simulacion de la tecla "-" 
@@ -80,14 +80,14 @@ RegistroLinea procesarLinea(char* lineaOriginal) {
             if (cursor < longi.longitud) cursor++; // cursor a la derecha
         } else if (c == '3') { // simulacion de la tecla "3" suprimir
             if (cursor < longi.longitud) {
-                for (int j = cursor; j < longi.longitud - 1; j++) { // mover los caracteres a la izquierda
+                for (int j = cursor; j < longi.longitud - 1; j++){ // mover los caracteres a la izquierda
                     resultado[j] = resultado[j + 1]; 
                 }
                 longi.longitud--; // disminuir la longitud
                 resultado[longi.longitud] = '\0'; // asignar el ultimo valor como nulo
             }
         } else {
-            for (int j = longi.longitud; j > cursor; j--) { // mover los caracteres a la derecha
+            for (int j = longi.longitud; j > cursor; j--){ // mover los caracteres a la derecha
                 resultado[j] = resultado[j - 1];
             }
             resultado[cursor] = c; // insertar el caracter
